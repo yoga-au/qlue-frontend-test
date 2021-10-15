@@ -8,6 +8,7 @@ import type { ResponseData } from "./types/ResponseData";
 
 // component import
 import Table from "./components/Table";
+import Chart from "./components/Chart";
 
 // styling
 const Container = styled.div`
@@ -101,6 +102,23 @@ function App() {
           </Button>
         </PaginationContainer>
         <Table data={data} />
+        <Chart data={data} />
+        <PaginationContainer>
+          <div style={{ marginRight: "0.875em" }}>Page</div>
+          <Button
+            disabled={page === 1 ? true : false}
+            onClick={() => handlePageChange(false)}
+          >
+            {"<"}
+          </Button>
+          <PageNumber>{page}</PageNumber>
+          <Button
+            onClick={() => handlePageChange(true)}
+            disabled={data && !data.next ? true : false}
+          >
+            {">"}
+          </Button>
+        </PaginationContainer>
       </Container>
     </>
   );
