@@ -13,6 +13,7 @@ const useFetch = (page: number) => {
     if (localStorage.getItem(`page${page}-qlueFeTestYoga`)) {
       const result = localStorage.getItem(`page${page}-qlueFeTestYoga`);
       setData(result && JSON.parse(result));
+      return;
     }
 
     try {
