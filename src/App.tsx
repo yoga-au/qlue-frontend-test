@@ -1,14 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
-
-// type import
-import type { AxiosResponse } from "axios";
-import type { ResponseData } from "./types/ResponseData";
 
 // component import
 import Table from "./components/Table";
 import Chart from "./components/Chart";
+
+// custom hooks import
+import useFetch from "./hooks/useFetch";
 
 // styling
 const Container = styled.div`
@@ -51,38 +49,9 @@ const Button = styled(ButtonReset)`
 `;
 
 function App() {
-  // state definiton
-  const [data, setData] = useState<ResponseData | null>(null);
   const [page, setPage] = useState(1);
 
-  const fetchData = useCallback(async () => {
-    if (localStorage.getItem(`page${page}-qlueFeTestYoga`)) {
-      const result = localStorage.getItem(`page${page}-qlueFeTestYoga`);
-      setData(result && JSON.parse(result));
-      return;
-    }
-
-    try {
-      const response: AxiosResponse<ResponseData> = await axios.get(
-        `people/?page=${page}`
-      );
-      const result = response.data;
-      setData(result);
-
-      if (!localStorage.getItem(`page${page}-qlueFeTestYoga`)) {
-        localStorage.setItem(
-          `page${page}-qlueFeTestYoga`,
-          JSON.stringify({ page, ...result })
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [page]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const { data } = useFetch(page);
 
   const handlePageChange = (isNext: boolean) => {
     if (isNext) {
@@ -93,20 +62,10 @@ function App() {
     setPage((prev) => prev - 1);
   };
 
-  // this return null
-  // const test = localStorage.getItem("page1");
-  // console.log(test);
-
-  // const dest = { foo: "1", bar: "2" };
-  // localStorage.setItem("page1", JSON.stringify({ page: "1", ...dest }));
-
-  // const obj = localStorage.getItem(`page${1}`);
-  // console.log(obj && JSON.parse(obj));
-
   return (
     <>
       <Container>
-        <Title>Qlue Test</Title>
+        <Title>Qlue Frontend Test</Title>
         <PaginationContainer>
           <div style={{ marginRight: "0.875em" }}>Page</div>
           <Button
