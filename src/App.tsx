@@ -56,20 +56,32 @@ function App() {
   const [page, setPage] = useState(1);
 
   const fetchData = useCallback(async () => {
-    const response: AxiosResponse<ResponseData> = await axios.get(
-      `people/?page=${page}`
-    );
-    const result = response.data;
-    // console.log(result);
-    setData(result);
-    return;
+    if (localStorage.getItem(`page${page}-qlueFeTestYoga`)) {
+      const result = localStorage.getItem(`page${page}-qlueFeTestYoga`);
+      setData(result && JSON.parse(result));
+      return;
+    }
+
+    try {
+      const response: AxiosResponse<ResponseData> = await axios.get(
+        `people/?page=${page}`
+      );
+      const result = response.data;
+      setData(result);
+
+      if (!localStorage.getItem(`page${page}-qlueFeTestYoga`)) {
+        localStorage.setItem(
+          `page${page}-qlueFeTestYoga`,
+          JSON.stringify({ page, ...result })
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }, [page]);
 
   useEffect(() => {
     fetchData();
-    // return () => {
-    //   cleanup
-    // }
   }, [fetchData]);
 
   const handlePageChange = (isNext: boolean) => {
@@ -80,6 +92,16 @@ function App() {
 
     setPage((prev) => prev - 1);
   };
+
+  // this return null
+  // const test = localStorage.getItem("page1");
+  // console.log(test);
+
+  // const dest = { foo: "1", bar: "2" };
+  // localStorage.setItem("page1", JSON.stringify({ page: "1", ...dest }));
+
+  // const obj = localStorage.getItem(`page${1}`);
+  // console.log(obj && JSON.parse(obj));
 
   return (
     <>
